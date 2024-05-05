@@ -1,0 +1,64 @@
+# THIS API IS TO CREATE A SIMPLE SIGN UP FOR THE ADMIN BEFORE HE OBTAINS ACCESS TO THE APP
+# THE ADMIN WILL RECIEVE AN EMAIL CONTAINING A URL IN ORDER TO VERIFY HIS EMAIL. THE URL AT THIS POINT IS 
+# http://localhost:5001/organizer/email-verification/:id/:token WHICH IS STILL THE BACKEND URL
+#### SIGNING UP
+POST http://localhost:5001/organizer/signup
+Content-Type: application/json
+
+{
+    "username": "Jose",
+    "email": "litorojose1@gmail.com",
+    "password": "P@ssw0rd"
+}
+
+
+
+#### VERIFYING EMAIL
+#THE URL BELOW IS THE ONE SENT TO THE ADMIN EMAIL CONTAINING THE TOKEN. DIFFERENT ONES ARE GENERATED FOR EACH USER
+GET http://localhost:5001/organizer/email-verification/4/6f383d93a4f1d7f17c8e37f4e337f3e2a352678c9369766d4d1a4214b29799b6
+
+
+# JUST TO ADD A LITTLE OF SECURITY TO THE ADMIN EMAIL HE HAS TO SIGN IN IN ORDER TO GAIN ACCESS TO THE APPLICATION 
+#AFTER VERIFYING HIS EMAIL
+##### SIGNING IN
+POST http://localhost:5001/organizer/signin
+Content-Type: application/json
+
+{
+    "email": "litorojose1@gmail.com",
+    "password": "P@ssw0rd"
+}
+
+
+
+##### ADDING A NEW ATTENDEE
+#THIS ROUTE IS USED TO ADD NEW ATTENDEES AFTER THEY HAD SCANNED THE QR CODE WHICH WILL REDIECT THEM TO THE ENTRY
+#POINT OF THE APPLICATION. BY DEFAULT THEY ARE ATTENDED TO CHURCH ATTENDEES
+POST http://localhost:5001/organizer/add-new-attendee
+Content-Type: application/json
+
+{
+    "name": "Jose Jefferson"
+}
+
+##### MAKING A DONATION
+# THIS ROUTE WILL GENERATE A PAYSTACK AUTHORIZATION URL FOR THE USER TO MAKE A DONATION. THE URL WILL BE SAVED IN 
+# THE DATABASE AND THE USER WILL BE REDIRECTED TO THE PAYSTACK PLATFORM TO MAKE THE PAYMENT.  
+#  PAYMENTS STATUSES WILL BE UPDATED UPON RECEIVING NOTIFICATIONS FROM PAYSTACK USING A BACKGROND JOB
+POST   http://localhost:5001/organizer/donate
+Content-Type: application/json
+
+{
+    "amount": 10000,
+    "email": "litorojose@gmail.com",
+    "id":"4"
+}
+
+##### ADDING A NEW ATTENDEE TO RECEPTION
+# THE USER CAN NOW BE ADDED TO THE RECEPTION LIST USING THIS ROUTE AFTER MAKING A DONATION
+POST http://localhost:5001/organizer/add-to-reception
+Content-Type: application/json
+
+{
+    "id":"4"
+}
