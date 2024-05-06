@@ -26,6 +26,10 @@ module.exports = (sequelize, DataTypes) => {
         defaultValue: ["Church"], // Set default value to 'Church'
         allowNull: false,
       },
+      burial_type: {
+        type: DataTypes.ENUM("Private", "Public"), // Add a field for burial type
+        allowNull: true, // Allow null to handle cases where burial type is not applicable
+      },
     },
     {
       sequelize,
