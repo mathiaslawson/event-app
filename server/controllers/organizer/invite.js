@@ -13,7 +13,8 @@ module.exports = {
     }
 
     // Check if name contains only letters
-    if (!/^[A-Za-z]+$/.test(name)) {
+    // Check if name contains only letters and white space
+    if (!/^[A-Za-z\s]+$/.test(name)) {
       return responseMiddleware(
         res,
         "400",

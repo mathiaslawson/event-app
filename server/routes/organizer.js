@@ -9,7 +9,10 @@ const {
   addingToReception,
   addToPrivateBurial,
 } = require("../controllers/organizer/invite");
-const { donation } = require("../controllers/organizer/donations");
+const {
+  donation,
+  totalDonations,
+} = require("../controllers/organizer/donations");
 const QRcodeGenerator = require("../controllers/organizer/qrCode");
 const route = express.Router();
 
@@ -21,6 +24,7 @@ route.post("/add-new-attendee", addNewAttendee);
 route.post("/add-to-reception", addingToReception);
 route.post("/add-to-private-burial", addToPrivateBurial);
 route.post("/donate", donation);
+route.get("/total-donation", totalDonations);
 route.post("/qr-code", QRcodeGenerator);
 
 module.exports = route;

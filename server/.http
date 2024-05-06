@@ -38,7 +38,7 @@ POST http://localhost:5001/organizer/add-new-attendee
 Content-Type: application/json
 
 {
-    "name": "Jose Jefferson"
+    "name": "Josey Jefferson"
 }
 
 ##### MAKING A DONATION
@@ -51,14 +51,36 @@ Content-Type: application/json
 {
     "amount": 10000,
     "email": "litorojose@gmail.com",
-    "id":"4"
+    "id":"5"
 }
 
+
 ##### ADDING A NEW ATTENDEE TO RECEPTION
-# THE USER CAN NOW BE ADDED TO THE RECEPTION LIST USING THIS ROUTE AFTER MAKING A DONATION
+# THE USER WILL BE ADDED TO THE RECEPTION LIST USING THIS ROUTE AFTER MAKING A DONATION
 POST http://localhost:5001/organizer/add-to-reception
 Content-Type: application/json
 
 {
-    "id":"4"
+    "id":"5"
 }
+
+##### ADDING A NEW ATTENDEE TO PRIVATE BURIAL
+# THE USER CAN NOW BE ADDED TO THE PRIVATE BURIAL 
+POST http://localhost:5001/organizer/add-to-private-burial
+Content-Type: application/json
+
+{
+    "id":"5"
+}
+
+#### GENERATING QR CODE URL
+POST  http://localhost:5001/organizer/qr-code
+Content-Type: application/json
+
+{
+    "url": "https://example.com"
+}
+
+
+# THIS ROUTE BRINGS RETURNS THE TOTAL TRANSACTIONS MADE 
+GET http://localhost:5001/organizer/total-donations
