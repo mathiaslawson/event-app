@@ -43,7 +43,7 @@ module.exports = {
         res,
         "201",
         "User successfully added",
-        null,
+        { id: newAttendees.id, name: newAttendees.name },
         "Success"
       );
     } catch (error) {
