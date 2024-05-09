@@ -1,18 +1,24 @@
 const { Op } = require("sequelize");
 const { responseMiddleware } = require("../../utils/response");
 const db = require("../../models");
-const { donations, attendees } = db;
+const { attendees } = db;
 
 module.exports = {
   getDonations: async (req, res) => {
     try {
-      const allDonations = await donations.findAll({
+      const allDonations = await attendees.findAll({
         where: { amount: { [Op.not]: null } },
-        attributes: ["attendee_id", "name", "amount"], // specify the attributes to include in the response
+        attributes: ["id", "name", "amount"], // specify the attributes to include in the response
       });
 
       if (!allDonations || allDonations.length === 0) {
-        return responseMiddleware(res, 400, "No donations made so far");
+        return responseMiddleware(
+          res,
+          400,
+          "No donations made so far",
+          null,
+          "Error"
+        );
       }
 
       return responseMiddleware(
@@ -26,7 +32,7 @@ module.exports = {
       console.error(error);
       return responseMiddleware(
         res,
-        "500",
+        500,
         "Error from the server",
         null,
         "Server Error"
@@ -40,7 +46,13 @@ module.exports = {
       });
 
       if (!allAttendees || allAttendees.length === 0) {
-        return responseMiddleware(res, 400, "No attendees found");
+        return responseMiddleware(
+          res,
+          400,
+          "No attendees found",
+          null,
+          "Error"
+        );
       }
 
       return responseMiddleware(
@@ -54,7 +66,7 @@ module.exports = {
       console.error(error);
       return responseMiddleware(
         res,
-        "500",
+        500,
         "Error from the server",
         null,
         "Server Error"
