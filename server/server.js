@@ -2,7 +2,6 @@ const express = require("express");
 const cors = require("cors");
 require("dotenv").config();
 const route = require("./routes/index");
-const scheduledTask = require("./utils/cronJobs")
 const app = express();
 
 
