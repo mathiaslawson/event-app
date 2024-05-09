@@ -97,7 +97,7 @@ module.exports = {
       await transaction.commit();
 
       // Send the verification email
-      const url = `http://localhost:5001/organizer/email-verification/${organizer.organizer_id}/${token.token}`;
+      const url = `${process.env.FRONTEND_URL}/${organizer.organizer_id}/${token.token}`;
       const email_sent = await sendEmail(
         organizer.email,
         "VERIFICATION EMAIL",
