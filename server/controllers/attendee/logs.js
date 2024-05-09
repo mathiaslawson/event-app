@@ -9,22 +9,6 @@ module.exports = {
   signup: async (req, res) => {
     const { name, email, password } = req.body;
 
-    // Validate input fields
-    if (!name || !email || !password) {
-      return responseMiddleware(res, 400, "Missing Fields", null, "Error");
-    }
-
-    // Validate email format
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-      return responseMiddleware(
-        res,
-        400,
-        "Invalid Email Format",
-        null,
-        "Error"
-      );
-    }
 
     try {
       // Check if an attendee with the provided email already exists
@@ -204,7 +188,7 @@ module.exports = {
         res,
         200,
         "Login Successful",
-        { name: attendee.name, email: attendee.email },
+        { id: attendee.id, name: attendee.name, email: attendee.email },
         "Success"
       );
     } catch (error) {
