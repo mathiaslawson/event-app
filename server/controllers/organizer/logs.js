@@ -14,9 +14,7 @@ module.exports = {
     // Regular expressions for validation
     const nameRegex = /^[a-zA-Z]+$/; // Name should only contain letters
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // Basic email format validation
-    const passwordRegex =
-      /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*()_+}{":;'?/>.<,])(?=.*[a-zA-Z]).{8,}$/; // Password format validation
-
+    
     // Check for missing fields
     if (!username || !email || !password) {
       return responseMiddleware(res, 400, "Missing Fields", null, "error");
@@ -38,16 +36,7 @@ module.exports = {
       );
     }
 
-    // Validate password
-    if (!passwordRegex.test(password)) {
-      return responseMiddleware(
-        res,
-        400,
-        "Invalid Password Format",
-        null,
-        "error"
-      );
-    }
+    
 
     // Start a Sequelize transaction
     const transaction = await db.sequelize.transaction();

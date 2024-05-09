@@ -25,6 +25,13 @@ module.exports = (sequelize, DataTypes) => {
           key: "organizer_id",
         },
       },
+      attendee_id: {
+        type: DataTypes.INTEGER,
+        references: {
+          model: "attendees",
+          key: "id",
+        },
+      },
       token: {
         type: DataTypes.STRING,
         allowNull: false,

@@ -5,7 +5,6 @@ const {
   signin,
 } = require("../controllers/organizer/logs");
 const {
-  addNewAttendee,
   addingToReception,
   addToPrivateBurial,
 } = require("../controllers/organizer/invite");
@@ -24,7 +23,6 @@ route.post("/signup", signUp);
 route.post("/signin", signin);
 route.get("/email-verification/:organizer_id/:token", email_verification);
 
-route.post("/add-new-attendee", addNewAttendee);
 route.post("/add-to-reception", addingToReception);
 route.post("/add-to-private-burial", addToPrivateBurial);
 route.get("/get-all-donations", getDonations);

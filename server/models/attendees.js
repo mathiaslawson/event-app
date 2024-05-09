@@ -21,6 +21,15 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: false,
       },
+      email: {
+        type: DataTypes.STRING,
+        unique: true,
+        allowNull: true,
+      },
+      password: {
+        type: DataTypes.STRING,
+        allowNull: true,
+      },
       event_type: {
         type: DataTypes.ARRAY(DataTypes.STRING),
         defaultValue: ["Church"], // Set default value to 'Church'
@@ -29,6 +38,10 @@ module.exports = (sequelize, DataTypes) => {
       burial_type: {
         type: DataTypes.ENUM("Private", "Public"), // Add a field for burial type
         allowNull: true, // Allow null to handle cases where burial type is not applicable
+      },
+      verified: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false,
       },
     },
     {
