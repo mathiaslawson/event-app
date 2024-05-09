@@ -9,7 +9,6 @@ module.exports = {
   signup: async (req, res) => {
     const { name, email, password } = req.body;
 
-
     try {
       // Check if an attendee with the provided email already exists
       const existingAttendee = await attendees.findOne({ where: { email } });
@@ -188,7 +187,13 @@ module.exports = {
         res,
         200,
         "Login Successful",
-        { id: attendee.id, name: attendee.name, email: attendee.email },
+        {
+          id: attendee.id,
+          name: attendee.name,
+          email: attendee.email,
+          event_type: attendee.event_type,
+          burial_type: attendee.burial_type,
+        },
         "Success"
       );
     } catch (error) {
