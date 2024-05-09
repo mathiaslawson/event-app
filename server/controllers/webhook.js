@@ -9,6 +9,6 @@ const webhook = async (req, res) => {
   if (hash == req.headers["x-paystack-signature"]) {
     const event = req.body;
   }
-  res.send(200);
+  console.log("webhooks", hash);
 };
 module.exports = { webhook };

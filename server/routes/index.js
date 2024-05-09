@@ -7,6 +7,6 @@ const routes = express.Router();
 
 routes.use("/organizer", organizerRoute);
 routes.use("/attendee", attendeeRoute);
-routes.use("paystack", paystackRoute);
+routes.use("/paystack", paystackRoute);
 
 module.exports = routes;
