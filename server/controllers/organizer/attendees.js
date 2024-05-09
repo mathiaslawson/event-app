@@ -8,7 +8,7 @@ module.exports = {
     try {
       const allDonations = await donations.findAll({
         where: { amount: { [Op.not]: null } },
-        attributes: ["name", "amount"], // specify the attributes to include in the response
+        attributes: ["attendee_id", "name", "amount"], // specify the attributes to include in the response
       });
 
       if (!allDonations || allDonations.length === 0) {
@@ -36,7 +36,7 @@ module.exports = {
   getAttendees: async (req, res) => {
     try {
       const allAttendees = await attendees.findAll({
-        attributes: ["name", "event_type", "burial_type"], // Specify the attributes to include in the response
+        attributes: ["id", "name", "event_type", "burial_type"], // Specify the attributes to include in the response
       });
 
       if (!allAttendees || allAttendees.length === 0) {
