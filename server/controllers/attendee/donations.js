@@ -36,7 +36,7 @@ module.exports = {
 
       const params = JSON.stringify({
         email: attendee.email,
-        amount: amount,
+        amount: amount * 100,
       });
 
       // Construct options for the payment initialization request
