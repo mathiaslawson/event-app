@@ -35,7 +35,7 @@ module.exports = {
 
       const params = JSON.stringify({
         email: email,
-        amount: amount,
+        amount: amount * 100,
       });
 
       // Construct options for the payment initialization request
@@ -61,6 +61,7 @@ module.exports = {
               // Save the transaction reference in the donations database
               await donations.create({
                 attendee_id: attendee.id,
+                email: attendee.email,
                 name: attendee.name,
                 reference: responseData.data.reference,
                 // Add other relevant fields to save in the donations table
