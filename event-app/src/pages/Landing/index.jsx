@@ -2,8 +2,12 @@ import React, { useEffect } from "react";
 import { Container, Button } from "reactstrap";
 import "./landing.css";
 import { Link } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { LoginSlice } from "../../services/redux/slices/AuthSlice";
 
 function LandingPage() {
+  const dispatch = useDispatch();
+
   return (
     <>
       <div
@@ -39,7 +43,7 @@ function LandingPage() {
         style={{ flexWrap: "wrap" }}
       >
         <div data-aos="zoom-in text-center">
-          <Link to="/creator-auth-login">
+          <Link to="/auth">
             <Button
               style={{
                 backgroundColor: "#2e343c",
@@ -47,13 +51,16 @@ function LandingPage() {
                 borderRadius: "30px",
               }}
               className=" px-5 py-2 text-center "
+              onClick={() => {
+                dispatch(LoginSlice.actions.uidynamic("organizer"));
+              }}
             >
               Setup Event
             </Button>
           </Link>
         </div>
         <div data-aos="zoom-in text-center">
-          <Link to="/attend-event">
+          <Link to="/auth">
             <Button
               style={{
                 backgroundColor: "#2e343c",
@@ -61,6 +68,9 @@ function LandingPage() {
                 borderRadius: "30px",
               }}
               className=" px-5 py-2 text-center "
+              onClick={() => {
+                dispatch(LoginSlice.actions.uidynamic("attend"));
+              }}
             >
               Attend Event
             </Button>

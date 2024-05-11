@@ -5,8 +5,11 @@ const initialState = {
   data: [],
   isAddPrivateBurialLoading: false,
   isAddPrivateBurialError: null,
-//   isMakeDonationLoading: false, 
-//   isMakeDonationError: null
+  donationsLoading: false, 
+  donationsError: null, 
+  donationsList: []
+  //   isMakeDonationLoading: false,
+  //   isMakeDonationError: null
 };
 
 //add-new-attendee
@@ -21,6 +24,17 @@ export const addPrivateBurial = createAsyncThunk(
   }
 );
 
+export const listDonations = createAsyncThunk(
+  "attendee/list-dontations",
+  async (payload) => {
+    const response = await axios.get(
+      "https://event-app-1.onrender.com/organizer/get-all-donations",
+      payload
+    );
+    return response.data;
+  }
+);
+
 //make-donation
 export const makeDonation = createAsyncThunk(
   "attendee/make-donation",
@@ -29,12 +43,12 @@ export const makeDonation = createAsyncThunk(
       "https://event-app-1.onrender.com/organizer/donate",
       payload
     );
-    console.log(response);
+   return response.data.data;
   }
 );
 
-const AddAttendeeSlice = createSlice({
-  name: "add-attendee",
+const PrivateBurialSlice = createSlice({
+  name: "private-burial",
   initialState,
   reducers: {},
   extraReducers: (builder) => {
@@ -71,4 +85,24 @@ const makeDonationSlice = createSlice({
   },
 });
 
-export { AddAttendeeSlice , makeDonationSlice};
+
+const listDonationsSlide = createSlice({
+  name: "list-donations",
+  initialState,
+  reducers: {},
+  extraReducers: (builder) => {
+    builder.addCase(listDonations.pending, (state) => {
+      state.donationsLoading = true;
+    });
+    builder.addCase(listDonations.fulfilled, (state, action) => {
+      state.donationsLoading = false;
+      state.donationsList = action.payload;
+    });
+    builder.addCase(listDonations.rejected, (state, action) => {
+      state.donationsLoading = false;
+      state.donationsError = action.error.message;
+    });
+  },
+});
+
+export { PrivateBurialSlice, makeDonationSlice, listDonationsSlide };

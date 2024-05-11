@@ -1,5 +1,9 @@
+import { useEffect } from "react";
 import { Routes, Route } from "react-router-dom";
 import PropTypes from "prop-types";
+import "@radix-ui/themes/styles.css";
+import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 const NeutralLayout = ({ children }) => {
   return (
@@ -10,9 +14,23 @@ const NeutralLayout = ({ children }) => {
 };
 
 const CreatorLayout = ({ children }) => {
+  // const navigate = useNavigate();
+
+  // const { isloggedIn } = useSelector((state) => ({
+  //   isloggedIn: state.login.isloggedIn,
+  // }));
+
+  // useEffect(() => {
+  //   if (isloggedIn === false) {
+  //     navigate("/creator-auth-login");
+  //   }
+  // }, [navigate]);
   return (
     <>
-      <div>{children}</div>
+      <div>
+       
+        {children}
+      </div>
     </>
   );
 };

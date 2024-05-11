@@ -7,6 +7,7 @@ import { DialogProvider } from "./components/Dialogue/DialogContext";
 import { BrowserRouter as Router } from "react-router-dom";
 import AllRoutes from "./layout/Routes";
 import LayoutWrapper from "./layout";
+import '@radix-ui/themes/styles.css';
 
 function App() {
   /*  

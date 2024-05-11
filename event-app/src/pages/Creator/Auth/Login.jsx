@@ -5,7 +5,7 @@ import "./styles.css";
 import { Link } from "react-router-dom";
 import { Button, Spinner } from "reactstrap";
 import { useDispatch, useSelector } from "react-redux";
-import { loginUser } from "../../../services/redux/slices/AuthSlice";
+import { loginAttendee, loginUser } from "../../../services/redux/slices/AuthSlice";
 import { useNavigate } from "react-router-dom";
 import { unwrapResult } from "@reduxjs/toolkit";
 
@@ -13,9 +13,10 @@ function Login() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const { loading, error } = useSelector((state) => ({
+  const { loading, error, eventType } = useSelector((state) => ({
     loading: state.login.isLoginLoading,
     error: state.login.isLoginError,
+    eventType: state.login.eventType,
   }));
 
   console.log(loading, error);
@@ -32,10 +33,17 @@ function Login() {
     }),
     onSubmit: (values) => {
       console.log(values);
-      dispatch(loginUser(values))
-        .then(unwrapResult)
-        .then(() => navigate("/creator-add-event"))
-        .catch(() => console.log("Login failed"));
+      if (eventType === "organizer") {
+        dispatch(loginUser(values))
+          .then(unwrapResult)
+          .then(() => navigate("/creator-add-event"))
+          .catch(() => console.log("Login failed"));
+      } else {
+        dispatch(loginAttendee(values))
+          .then(unwrapResult)
+          .then(() => navigate("/attend-event"))
+          .catch(() => console.log("Login failed"));
+      }
     },
   });
 
@@ -46,7 +54,7 @@ function Login() {
         // style={{ backgroundColor: "#212529", borderRadius: "10px" , maxWidth: '50%'}}
       >
         <div
-          style={{ backgroundColor: "#212529", borderRadius: "10px", }}
+          style={{ backgroundColor: "#212529", borderRadius: "10px" }}
           className="p-5"
         >
           <div className="mt-3 mb-5">Login</div>
@@ -109,12 +117,12 @@ function Login() {
                 cursor: "pointer",
               }}
             >
-              <Link
+              {/* <Link
                 to="/creator-auth-register"
                 style={{ textDecoration: "none", color: "#c9d1ce" }}
               >
                 <p>Not Registered? Sign Up here</p>
-              </Link>
+              </Link> */}
             </div>
             <button
               type="submit"

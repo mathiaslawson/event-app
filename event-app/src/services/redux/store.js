@@ -1,13 +1,17 @@
 import { configureStore } from "@reduxjs/toolkit";
-import { LoginSlice, RegisterSlice } from "./slices/AuthSlice";
-import { AddAttendeeSlice, makeDonationSlice } from "./slices/AttendeeSlice";
+import {
+  AttendeeLoginSlice,
+  AttendeeRegisterSlice,
+  LoginSlice,
+  RegisterSlice,
+  VerifyAttendeeSlice,
+  VerifySlice,
+
+} from "./slices/AuthSlice";
+import { AddAttendeeSlice, AttendeeListSlice, makeDonationSlice } from "./slices/AttendeeSlice";
+import { PrivateBurialSlice, listDonationsSlide } from "./slices/OrganizerSlice";
 
 /*
-
-[x] - add url for login 
-[x] - hit from ui
-[] - set up from actions
-[] - do registration
 
 
 */
@@ -17,7 +21,14 @@ const store = configureStore({
     login: LoginSlice.reducer,
     register: RegisterSlice.reducer,
     addAttendee: AddAttendeeSlice.reducer,
-    makeDonationSlice: makeDonationSlice.reducer
+    makeDonation: makeDonationSlice.reducer,
+    privateBurial: PrivateBurialSlice.reducer,
+    verify: VerifySlice.reducer,
+    attendeeVerify: VerifyAttendeeSlice.reducer,
+    attendees: AttendeeListSlice.reducer,
+    donations: listDonationsSlide.reducer, 
+    attendeelogin: AttendeeLoginSlice.reducer,
+    attendeeRegister: AttendeeRegisterSlice.reducer,
   },
 });
 
