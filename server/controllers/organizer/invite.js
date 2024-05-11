@@ -3,68 +3,6 @@ const db = require("../../models");
 const { attendees, donations } = db;
 
 module.exports = {
-  addNewAttendee: async (req, res) => {
-    const { name } = req.body;
-    console.log("name", name);
-
-    // Check if name is empty or not a string
-    if (!name) {
-      return responseMiddleware(res, "400", "Name is required", null, "Error");
-    }
-
-    // Check if name contains only letters
-    // Check if name contains only letters and white space
-    if (!/^[A-Za-z\s]+$/.test(name)) {
-      return responseMiddleware(
-        res,
-        "400",
-        "Name should only contain letters",
-        null,
-        "Error"
-      );
-    }
-
-    try {
-      const newAttendees = await attendees.create({
-        name,
-      });
-      console.log("newAttendees", newAttendees);
-
-      if (!newAttendees) {
-        return responseMiddleware(
-          res,
-          "400",
-          "Error adding user",
-          null,
-          "Error"
-        );
-      }
-      return responseMiddleware(
-        res,
-        "201",
-        "User successfully added",
-        { id: newAttendees.id, name: newAttendees.name },
-        "Success"
-      );
-    } catch (error) {
-      if (error instanceof Error) {
-        return responseMiddleware(
-          res,
-          "500",
-          error.message,
-          null,
-          "Server Error"
-        );
-      }
-      return responseMiddleware(
-        res,
-        "500",
-        "Error from the server",
-        null,
-        "Server Error"
-      );
-    }
-  },
   addingToReception: async (req, res) => {
     const { id } = req.body;
     if (!id) {

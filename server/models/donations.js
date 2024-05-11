@@ -25,6 +25,7 @@ module.exports = (sequelize, DataTypes) => {
         },
       },
       name: { type: DataTypes.STRING, allowNull: false },
+      email: { type: DataTypes.STRING, allowNull: true },
       reference: { type: DataTypes.STRING, allowNull: false },
       amount: { type: DataTypes.STRING, allowNull: true },
       paid: { type: DataTypes.BOOLEAN, defaultValue: false },

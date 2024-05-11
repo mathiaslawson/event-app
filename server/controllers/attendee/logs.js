@@ -1,79 +1,59 @@
 const { responseMiddleware } = require("../../utils/response");
-const { hashText, compareHashes } = require("../../utils/hashing");
-const { sendEmail } = require("../../utils/comm");
-const crypto = require("crypto");
 const db = require("../../models");
-const { where, Op } = require("sequelize");
-const { Console } = require("console");
-const { Organizers, Tokens } = db;
+const { attendees, Tokens } = db;
+const { hashText, compareHashes } = require("../../utils/hashing");
+const crypto = require("crypto");
+const { sendEmail } = require("../../utils/comm");
 
 module.exports = {
-  signUp: async (req, res) => {
-    const { username, email, password } = req.body;
-
-    // Start a Sequelize transaction
-    const transaction = await db.sequelize.transaction();
+  signup: async (req, res) => {
+    const { name, email, password } = req.body;
 
     try {
-      // Check if an organizer with the provided email already exists
-      const existingOrganizer = await Organizers.findOne({
-        where: { email: email },
-        transaction,
-      });
-
-      if (existingOrganizer) {
-        // Rollback the transaction and return a conflict response
-        await transaction.rollback();
+      // Check if an attendee with the provided email already exists
+      const existingAttendee = await attendees.findOne({ where: { email } });
+      if (existingAttendee) {
         return responseMiddleware(
           res,
           409,
-          "Email already exists",
+          "User already exists",
           null,
-          "error"
+          "Error"
         );
       }
 
       // Hash the password
-      const hashed_password = await hashText(password, 10);
+      const hashedPassword = await hashText(password, 10);
 
-      // Create a new organizer within the transaction
-      const organizer = await Organizers.create(
-        {
-          username,
-          email,
-          password: hashed_password,
-        },
-        { transaction }
-      );
+      // Create a new attendee
+      const attendee = await attendees.create({
+        name,
+        email,
+        password: hashedPassword,
+      });
 
       // Generate a verification token
-      const token = await Tokens.create(
-        {
-          organizer_id: organizer.organizer_id,
-          token: crypto.randomBytes(32).toString("hex"),
-        },
-        { transaction }
-      );
-
-      // Commit the transaction
-      await transaction.commit();
+      const token = await Tokens.create({
+        attendee_id: attendee.id,
+        token: crypto.randomBytes(32).toString("hex"),
+      });
 
       // Send the verification email
-      const url = `http://localhost:3000/organizer/email-verification/${organizer.organizer_id}/${token.token}`;
-      const email_sent = await sendEmail(
-        organizer.email,
+      const url = `http://localhost:3000/attendee/email-verification/${attendee.id}/${token.token}`;
+      const emailSent = await sendEmail(
+        attendee.email,
         "VERIFICATION EMAIL",
-        "organizerVerification.ejs",
-        { organizer: organizer.username, verificationLink: url }
+        "attendeeVerification.ejs",
+        { name: attendee.name, verificationLink: url }
       );
 
-      if (!email_sent) {
+      if (!emailSent) {
         return responseMiddleware(
           res,
           400,
           "Error sending email for verification",
           null,
-          "error"
+          "Error"
         );
       }
 
@@ -82,34 +62,21 @@ module.exports = {
         200,
         "Email sent successfully! Please verify your email for confirmation",
         null,
-        "success"
+        "Success"
       );
     } catch (error) {
-      // Rollback the transaction and handle errors
-      await transaction.rollback();
       console.error("Error occurred during sign-up:", error);
-      if (error instanceof Error) {
-        return responseMiddleware(
-          res,
-          500,
-          error.message,
-          null,
-          "server error"
-        );
-      }
       return responseMiddleware(
         res,
         500,
-        "Error in the server",
+        "An error occurred during sign-up",
         null,
-        "server error"
+        "Server Error"
       );
     }
   },
-
-  /// VERIFYING EMAIL LINK SENT TO THE CLIENT
-  email_verification: async (req, res) => {
-    const { organizer_id, token: verificationToken } = req.params;
+  email_Verification: async (req, res) => {
+    const { id, token: verificationToken } = req.params;
     console.log("req.params", req.params);
 
     if (!verificationToken) {
@@ -120,17 +87,17 @@ module.exports = {
     const transaction = await db.sequelize.transaction();
 
     try {
-      // Find the organizer by organizer_id
-      const organizer = await Organizers.findOne({
-        where: { organizer_id },
+      // Find the attendee by attendee_id
+      const attendee = await attendees.findOne({
+        where: { id },
         transaction,
       });
-      if (!organizer) {
+      if (!attendee) {
         await transaction.rollback();
         return responseMiddleware(
           res,
           400,
-          "Invalid Organizer ID",
+          "Invalid Attendee ID",
           null,
           "Error"
         );
@@ -139,7 +106,7 @@ module.exports = {
       // Find the token in the database
       const token = await Tokens.findOne({
         where: {
-          organizer_id: organizer.organizer_id,
+          attendee_id: attendee.id,
           token: verificationToken,
         },
         transaction,
@@ -149,10 +116,10 @@ module.exports = {
         return responseMiddleware(res, 400, "Invalid Token", null, "Error");
       }
 
-      // Update the organizer's verified status to true
-      await Organizers.update(
+      // Update the attendee's verified status to true
+      await attendees.update(
         { verified: true },
-        { where: { organizer_id }, transaction }
+        { where: { id }, transaction }
       );
 
       // Delete the verification token from the database
@@ -185,18 +152,19 @@ module.exports = {
       );
     }
   },
-
   signin: async (req, res) => {
     const { email, password } = req.body;
+    console.log("email", req.body.email);
+    console.log("password", req.body.password);
     if (!email || !password) {
       return responseMiddleware(res, "400", "Missing Fields", null, "Error");
     }
 
     try {
-      const organizer = await Organizers.findOne({
+      const attendee = await attendees.findOne({
         where: { email },
       });
-      if (!organizer) {
+      if (!attendee) {
         return responseMiddleware(
           res,
           "400",
@@ -205,7 +173,7 @@ module.exports = {
           "Error"
         );
       }
-      const result = await compareHashes(password, organizer.password);
+      const result = await compareHashes(password, attendee.password);
       if (!result) {
         return responseMiddleware(
           res,
@@ -215,12 +183,24 @@ module.exports = {
           "Error"
         );
       }
-      return responseMiddleware(res, 200, "Login Successful", null, "Success");
+      return responseMiddleware(
+        res,
+        200,
+        "Login Successful",
+        {
+          id: attendee.id,
+          name: attendee.name,
+          email: attendee.email,
+          event_type: attendee.event_type,
+          burial_type: attendee.burial_type,
+        },
+        "Success"
+      );
     } catch (error) {
       return responseMiddleware(
         res,
         500,
-        "An error occurred during email verification",
+        "An error occurred during sign in",
         null,
         "Server Error"
       );
