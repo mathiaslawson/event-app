@@ -8,6 +8,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { loginAttendee, loginUser } from "../../../services/redux/slices/AuthSlice";
 import { useNavigate } from "react-router-dom";
 import { unwrapResult } from "@reduxjs/toolkit";
+import toast from "react-hot-toast";
 
 function Login() {
   const dispatch = useDispatch();
@@ -36,13 +37,22 @@ function Login() {
       if (eventType === "organizer") {
         dispatch(loginUser(values))
           .then(unwrapResult)
-          .then(() => navigate("/creator-add-event"))
-          .catch(() => console.log("Login failed"));
+          .then(() => {
+            toast.success("Login successful");
+            navigate("/creator-add-event")})
+          .catch(() => {
+            toast.error("Error occured in login, Please try again!");
+            console.log("Login failed")});
       } else {
         dispatch(loginAttendee(values))
           .then(unwrapResult)
-          .then(() => navigate("/attend-event"))
-          .catch(() => console.log("Login failed"));
+          .then(() => {
+            toast.success("Login successful");
+            navigate("/attend-event")})
+          .catch(() => {console.log("Login failed")
+
+          toast.error("Error occured in login, Please try again!");
+          });
       }
     },
   });

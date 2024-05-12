@@ -6,12 +6,12 @@ import { Link } from "react-router-dom";
 import { Button, Spinner } from "reactstrap";
 import { useDispatch, useSelector } from "react-redux";
 import {
-
   registerAttendee,
   registerUser,
 } from "../../../services/redux/slices/AuthSlice";
 import { useNavigate } from "react-router-dom";
 import { unwrapResult } from "@reduxjs/toolkit";
+import toast from "react-hot-toast";
 
 function Register() {
   const dispatch = useDispatch();
@@ -42,13 +42,27 @@ function Register() {
       if (eventType === "organizer") {
         dispatch(registerUser(values))
           .then(unwrapResult)
-          .then(() => navigate("/"))
-          .catch(() => console.log("Register failed"));
+          .then(() => {
+            navigate("/");
+            toast.success(
+              "Registration successful, Please check your email for confirmation"
+            );
+          })
+          .catch(() => {
+            toast.error("Error occured in registration, Please try again!");
+          });
       } else {
-        dispatch(registerAttendee({name: values.username, ...values}))
+        dispatch(registerAttendee({ name: values.username, ...values }))
           .then(unwrapResult)
-          .then(() => navigate("/"))
-          .catch(() => console.log("Register failed"));
+          .then(() => {
+            navigate("/");
+            toast.success(
+              "Registration successful, Please check your email for confirmation"
+            );
+          })
+          .catch((error) => {
+            toast.error("Error occured in registration, Please try again!");
+          });
       }
     },
   });

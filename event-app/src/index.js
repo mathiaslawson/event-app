@@ -6,12 +6,17 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import { Container } from "reactstrap";
 import { Provider } from "react-redux";
 import store from "./services/redux/store";
-import '@radix-ui/themes/styles.css';
+import "@radix-ui/themes/styles.css";
+import toast, { Toaster } from "react-hot-toast";
+
+const notify = () => toast("Here is your toast.");
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
     <Provider store={store}>
+      <Toaster />
+
       <div className="intro-hero" style={{ height: "100svh" }}>
         <div className="intro-hero-overlay"></div>
         <Container className=" intro-hero-content">
